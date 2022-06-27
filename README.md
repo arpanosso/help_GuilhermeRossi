@@ -1,36 +1,129 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# help_GuilhermeRossi
+# help_Guilherme Rossi
 
-<!-- badges: start -->
-<!-- badges: end -->
-
-The goal of help_GuilhermeRossi is to …
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+## carregando os pacotes necessários
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+require(ExpDes.pt)
+#> Carregando pacotes exigidos: ExpDes.pt
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+# Anova utilizando o pacote {ExpDes.pt}
 
-You can also embed plots, for example:
+``` r
+dados <- read.table("data/soybean peroxide_2way.txt", header = TRUE)
+head(dados)
+#>   Soybean    Water Peroxide
+#> 1      Bt     Well 2.41e-06
+#> 2      Bt     Well 1.62e-06
+#> 3      Bt     Well 1.56e-06
+#> 4      Bt     Well 2.39e-06
+#> 5      Bt     Well 1.94e-06
+#> 6      Bt Deprived 1.02e-06
+fator1 <- dados$Soybean
+fator2 <- dados$Water
+y <- dados$Peroxide
 
-![](README_files/figure-gfm/pressure-1.png)<!-- -->
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub.
+fat2.dic(fator1, fator2, y, quali = c(TRUE, TRUE), mcomp="tukey",
+         fac.names = c("Soybean", "Water"))
+#> ------------------------------------------------------------------------
+#> Legenda:
+#> FATOR 1:  Soybean 
+#> FATOR 2:  Water 
+#> ------------------------------------------------------------------------
+#> 
+#> 
+#> Quadro da analise de variancia
+#> ------------------------------------------------------------------------
+#>               GL         SQ QM      Fc   Pr>Fc
+#> Soybean        1 2.6220e-13  3  0.9607 0.34160
+#> Water          1 7.5768e-12  5 27.7603 0.00008
+#> Soybean*Water  1 1.4634e-12  2  5.3617 0.03418
+#> Residuo       16 4.3670e-12  4                
+#> Total         19 1.3669e-11  1                
+#> ------------------------------------------------------------------------
+#> CV = 29.79 %
+#> 
+#> ------------------------------------------------------------------------
+#> Teste de normalidade dos residuos (Shapiro-Wilk)
+#> valor-p:  0.3375591 
+#> De acordo com o teste de Shapiro-Wilk a 5% de significancia, os residuos podem ser considerados normais.
+#> ------------------------------------------------------------------------
+#> 
+#> 
+#> 
+#> Interacao significativa: desdobrando a interacao
+#> ------------------------------------------------------------------------
+#> 
+#> Desdobrando  Soybean  dentro de cada nivel de  Water 
+#> ------------------------------------------------------------------------
+#> ------------------------------------------------------------------------
+#> Quadro da analise de variancia
+#> ------------------------------------------------------------------------
+#>                        GL SQ QM      Fc  Pr.Fc
+#> Water                   1  0  0 27.7603  1e-04
+#> Soybean:Water Deprived  1  0  0  0.8916 0.3591
+#> Soybean:Water Well      1  0  0  5.4307 0.0332
+#> Residuo                16  0  0               
+#> Total                  19  0  0               
+#> ------------------------------------------------------------------------
+#> 
+#> 
+#> 
+#>  Soybean  dentro do nivel  Deprived  de  Water 
+#> 
+#> De acordo com o teste F, as medias desse fator sao estatisticamente iguais.
+#> ------------------------------------------------------------------------
+#>   Niveis    Medias
+#> 1     Bt 1.294e-06
+#> 2    nBt 9.820e-07
+#> ------------------------------------------------------------------------
+#> 
+#> 
+#>  Soybean  dentro do nivel  Well  de  Water 
+#> ------------------------------------------------------------------------
+#> Teste de Tukey
+#> ------------------------------------------------------------------------
+#> Grupos Tratamentos Medias
+#> a     nBt     2.754e-06 
+#>  b    Bt      1.984e-06 
+#> ------------------------------------------------------------------------
+#> 
+#> 
+#> 
+#> Desdobrando  Water  dentro de cada nivel de  Soybean 
+#> ------------------------------------------------------------------------
+#> ------------------------------------------------------------------------
+#> Quadro da analise de variancia
+#> ------------------------------------------------------------------------
+#>                   GL SQ QM      Fc  Pr.Fc
+#> Soybean            1  0  0  0.9607 0.3416
+#> Water:Soybean Bt   1  0  0  4.3609 0.0531
+#> Water:Soybean nBt  1  0  0 28.7611  1e-04
+#> Residuo           16  0  0               
+#> Total             19  0  0               
+#> ------------------------------------------------------------------------
+#> 
+#> 
+#> 
+#>  Water  dentro do nivel  Bt  de  Soybean 
+#> 
+#> De acordo com o teste F, as medias desse fator sao estatisticamente iguais.
+#> ------------------------------------------------------------------------
+#>     Niveis    Medias
+#> 1 Deprived 1.294e-06
+#> 2     Well 1.984e-06
+#> ------------------------------------------------------------------------
+#> 
+#> 
+#>  Water  dentro do nivel  nBt  de  Soybean 
+#> ------------------------------------------------------------------------
+#> Teste de Tukey
+#> ------------------------------------------------------------------------
+#> Grupos Tratamentos Medias
+#> a     Well    2.754e-06 
+#>  b    Deprived    9.82e-07 
+#> ------------------------------------------------------------------------
+```
